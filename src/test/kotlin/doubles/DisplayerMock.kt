@@ -13,6 +13,7 @@ class DisplayerMock : Displayer {
     private var allOperationsHaveCompliedWithTheDelay = true
     private var minimumAllowedDelay = 0L
     private var maximumAllowedDelay = 0L
+    private val displayedOperations = mutableListOf<Pair<Double, Double>>()
 
     fun initializationQuestionsAndOperationsAreDisplayedAndInAppropriateOrder(): Boolean {
         return initializationQuestionsAreTheFirstDisplayedThings() && thereIsAtLeastOneOperationAfterTheInitializationQuestions()
@@ -20,6 +21,12 @@ class DisplayerMock : Displayer {
 
     fun getNumberOfDisplayedOperations(): Int {
         return thingsThatHaveBeenDisplayedInComingOrder.filter { it == ThingsThatCanBeDisplayed.OPERATION }.size
+    }
+
+    fun getDisplayedOperationsAsString(): List<String> {
+        return displayedOperations.map {
+            "${it.first}*${it.second}"
+        }
     }
 
     fun delayHasBeenCompliedThroughoutTheGame(): Boolean {
@@ -69,5 +76,6 @@ class DisplayerMock : Displayer {
     override fun displayMultiplication(firstOperand: Double, secondOperand: Double) {
         notifyIfOperationHasNotBeenDisplayedInTime()
         thingsThatHaveBeenDisplayedInComingOrder.add(ThingsThatCanBeDisplayed.OPERATION)
+        displayedOperations.add(firstOperand to secondOperand)
     }
 }
